@@ -1,26 +1,11 @@
-const mysql = require("mysql2");
-  
-const connection = mysql.createConnection({
-  host: "",
-  user: "",
-  database: "",
-  password: ""
+const knex = require('knex')({
+  client: 'mysql2',
+  connection: {
+    host : '185.5.251.215',
+    user : 'root',
+    password : '',
+    database : 'myapp'
+  }
 });
 
-// connection.connect(function(err){
-//     if (err) {
-//       return console.error("Ошибка: " + err.message);
-//     }
-//     else{
-//       console.log("Подключение к серверу MySQL успешно установлено");
-//     }
-//  });
-//  // закрытие подключения
-//  connection.end(function(err) {
-//   if (err) {
-//     return console.log("Ошибка: " + err.message);
-//   }
-//   console.log("Подключение закрыто");
-// });
-
-module.exports = connection;
+module.exports = knex;
