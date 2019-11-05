@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
     try {
         const defaultQuery = {
             orderBy: 'price',
-            order: 'ACS',
+            order: 'asc',
             offset: 0,
             limit: 10,
             min: 0,
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
             coordY: [-180, 180],
         };
         dataQuery = {...defaultQuery, ...req.query}
-        console.log(dataQuery);
+        console.log(req.query);
         const data = await dbFind.getListRoom(dataQuery);
         res.status(200)
         .json(data);
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        dataQuery = req.body.data;
+        dataQuery = req.body.dataQuery;
         console.log(dataQuery);
         const data = await dbFind.getListRoom(dataQuery);
         res.status(200)
