@@ -16,10 +16,12 @@ router.get('/', async (req, res) => {
             coordY: [-180, 180],
         };
         dataQuery = {...defaultQuery, ...req.query}
-        console.log(dataQuery);
+        console.log('GET',dataQuery);
         const data = await dbFind.getListRoom(dataQuery);
+        console.log(data)
         res.status(200)
-        .json(data);
+        console.log(res)
+        res.json(data);
     } catch (error) {
         res.status(500)
         .json('Error');
@@ -31,6 +33,7 @@ router.post('/', async (req, res) => {
         dataQuery = req.body.data;
         console.log(dataQuery);
         const data = await dbFind.getListRoom(dataQuery);
+        console.log(data);
         res.status(200)
         .json(data);
     } catch (error) {

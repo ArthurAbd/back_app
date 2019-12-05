@@ -16,11 +16,17 @@ app.use(logger('dev'));
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(bodyParser());
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 app.use('/room', roomRouter);
 app.use('/find', findRouter);
 app.use('/', indexRouter);
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+app.listen(3001, function () {
+    console.log('Example app listening on port 3001!');
   });
