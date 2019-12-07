@@ -26,17 +26,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-    try {
-        dataQuery = req.body.dataQuery;
-        console.log(dataQuery);
-        const data = await dbFind.getListRoom(dataQuery);
-        res.status(200)
-        .json(data);
-    } catch (error) {
-        res.status(500)
-        .json('Error');
-    }
-});
-
 module.exports = router;

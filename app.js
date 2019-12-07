@@ -26,6 +26,6 @@ app.use('/room', roomRouter);
 app.use('/find', findRouter);
 app.use('/', indexRouter);
 
-app.listen(3002, function () {
-    console.log('Example app listening on port 3002!');
+app.listen(3001, function () {
+    console.log('Example app listening on port 3001!');
   });
