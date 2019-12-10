@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
     try {
         const defaultQuery = {
             orderBy: 'price',
-            order: 'ACS',
+            order: 'asc',
             offset: 0,
             limit: 10,
             min: 0,

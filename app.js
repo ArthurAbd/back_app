@@ -22,7 +22,6 @@ app.use((req, res, next) => {
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-
 app.use('/room', roomRouter);
 app.use('/find', findRouter);
 app.use('/', indexRouter);
