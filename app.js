@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const roomRouter = require('./routes/room');
 const findRouter = require('./routes/find');
 const indexRouter = require('./routes/index');
+const mapRouter = require('./routes/map');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 app.use('/room', roomRouter);
 app.use('/find', findRouter);
+app.use('/map', mapRouter);
 app.use('/', indexRouter);
 
 app.listen(3001, function () {

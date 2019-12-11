@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
         };
         dataQuery = {...defaultQuery, ...req.query}
         console.log(req.query);
-        const data = await dbFind.getListRoom(dataQuery);
+        const data = await dbFind.getListRooms(dataQuery);
         res.status(200)
         .json(data);
     } catch (error) {
