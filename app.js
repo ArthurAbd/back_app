@@ -1,21 +1,33 @@
 const express = require('express');
-const path = require('path');
-// const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
 const bodyParser = require('body-parser')
-
+const passport = require('passport');
 const roomRouter = require('./routes/room');
 const findRouter = require('./routes/find');
 const indexRouter = require('./routes/index');
 const mapRouter = require('./routes/map');
+const oauth2 = require('./helpers/oauth2')
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+
+require('./helpers/oauth');
+
+app.post('/oauth/token', oauth2.token);
+
+app.get('/user',
+    passport.authenticate('bearer', { session: false }),
+        function(req, res) {
+            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
+        }
+);
+
 app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
+
+
 app.use(bodyParser());
 app.use((req, res, next) => {
   res.append('Access-Control-Allow-Origin', ['*']);
