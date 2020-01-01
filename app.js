@@ -6,35 +6,24 @@ const roomRouter = require('./routes/room');
 const findRouter = require('./routes/find');
 const indexRouter = require('./routes/index');
 const mapRouter = require('./routes/map');
+const userRouter = require('./routes/user');
+const cors = require('cors')
 const oauth2 = require('./helpers/oauth2')
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
+app.use(cors())
 
-require('./helpers/oauth');
+require('./helpers/strategies');
 
 app.post('/oauth/token', oauth2.token);
 
-app.get('/user',
-    passport.authenticate('bearer', { session: false }),
-        function(req, res) {
-            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
-        }
-);
-
 app.use(logger('dev'));
 
-
-app.use(bodyParser());
-app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use('/user', userRouter);
 app.use('/room', roomRouter);
 app.use('/find', findRouter);
 app.use('/map', mapRouter);
