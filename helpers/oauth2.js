@@ -2,6 +2,7 @@ const oauth2orize         = require('oauth2orize');
 const passport            = require('passport');
 const crypto              = require('crypto');
 const dbOauth             = require('../db/oauth');
+const dbUser              = require('../db/user');
 const authHelper          = require('./auth')
 
 const server = oauth2orize.createServer();
@@ -9,14 +10,16 @@ const server = oauth2orize.createServer();
 server.exchange(oauth2orize.exchange.password(async function(client, username, password, scope, done) {
     try {
         console.log('serverPassword', arguments)
-        const user = await dbOauth.findUserByEmail(username)
-        if (!user) return done(null, false)
-        if (!authHelper.checkPassword(password, user.password, user.username)) return done(null, false)
+        const user = await dbUser.findUserByEmail(username)
+
+        if (!user) return done(null, false, { message: 'Пользователь не существует' })
+        if (!authHelper.checkPassword(password, user.password, username)) {
+            console.log(password, user.password, username)
+            return done(null, false, { message: 'Не правильный пароль' })
+        }
 
         await dbOauth.delRefreshToken(user.userId, client.clientId)
         await dbOauth.delAccessToken(user.userId, client.clientId)
-        console.log(user)
-        console.log(typeof(Date.now()))
 
         const tokenValue = crypto.randomBytes(32).toString('base64');
         const refreshTokenValue = crypto.randomBytes(32).toString('base64');
@@ -44,10 +47,10 @@ server.exchange(oauth2orize.exchange.refreshToken(async function(client, refresh
     try {
         console.log('serverRefreshToken', arguments)
         const dbRefreshToken = await dbOauth.findRefreshToken(refreshToken)
-        if (!dbRefreshToken) return done(null, false)
+        if (!dbRefreshToken) return done(null, false, { message: 'Incorrect refresh token' })
 
-        const user = await dbOauth.findUserById(dbRefreshToken.userId)
-        if (!user) return done(null, false)
+        const user = await dbUser.findUserById(dbRefreshToken.userId)
+        if (!user) return done(null, false, { message: 'Incorrect user' })
 
         await dbOauth.delRefreshToken(user.userId, client.clientId)
         await dbOauth.delAccessToken(user.userId, client.clientId)
@@ -76,7 +79,7 @@ server.exchange(oauth2orize.exchange.refreshToken(async function(client, refresh
 
 
 exports.token = [
-    passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+    passport.authenticate(['basic', 'oauth2-client-password'], {failureFlash: true, session: false}),
     server.token(),
     server.errorHandler()
 ]

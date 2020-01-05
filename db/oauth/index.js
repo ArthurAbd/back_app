@@ -1,14 +1,5 @@
 const knex = require('../connection');
 
-async function findUser(email) {
-    return knex('user')
-        .where('email', email)
-        .then(res => {
-            if (!res) undefined
-            return res[0]
-        });
-}
-
 async function findClient(id) {
     return knex('client')
         .where('clientId', id)
@@ -36,23 +27,6 @@ async function findRefreshToken(refreshToken) {
         });
 }
 
-async function findUserById(id) {
-    return knex('user')
-        .where('userId', id)
-        .then(res => {
-            if (!res) undefined
-            return res[0]
-        });
-}
-
-async function findUserByEmail(email) {
-    return knex('user')
-        .where('email', email)
-        .then(res => {
-            if (!res) undefined
-            return res[0]
-        });
-}
 
 async function delAccessTokenByToken(token) {
     return knex('access_token')
@@ -90,15 +64,12 @@ async function saveRefreshToken(data) {
 
 
 module.exports = {
-    findUser,
     findRefreshToken,
     saveRefreshToken,
     saveAccessToken,
     delAccessToken,
     delRefreshToken,
     delAccessTokenByToken,
-    findUserByEmail,
-    findUserById,
     findAccessToken,
     findClient
 }

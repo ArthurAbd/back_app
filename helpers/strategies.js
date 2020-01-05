@@ -3,6 +3,7 @@ const BasicStrategy           = require('passport-http').BasicStrategy
 const ClientPasswordStrategy  = require('passport-oauth2-client-password').Strategy
 const BearerStrategy          = require('passport-http-bearer').Strategy
 const dbOauth                 = require('../db/oauth');
+const dbUser                  = require('../db/user');
 const authHelper              = require('./auth')
 
 
@@ -10,7 +11,7 @@ passport.use(new BasicStrategy(
     async function(username, password, done) {
         console.log('BasicStrategy', arguments)
         try {
-            const user = await dbOauth.findUser(username)
+            const user = await dbUser.findUser(username)
             if (!user) return done(null, false)
             if (!authHelper.checkPassword(password, user.password, user.username)) return done(null, false)
 
@@ -46,7 +47,7 @@ passport.use(new BearerStrategy(
                 return done(null, false, { message: 'Token expired' }) 
             }
 
-            const user = await dbOauth.findUserById(dbAccessToken.userId)
+            const user = await dbUser.findUserById(dbAccessToken.userId)
             if (!user) return done(null, false, { message: 'Unknown user' })
 
             return done(null, user, { scope: '*' });
