@@ -7,7 +7,6 @@ const findRouter = require('./routes/find');
 const indexRouter = require('./routes/index');
 const mapRouter = require('./routes/map');
 const userRouter = require('./routes/user');
-const logoutRouter = require('./routes/logout');
 const cors = require('cors')
 const oauth2 = require('./helpers/oauth2')
 
@@ -28,7 +27,6 @@ app.use('/user', userRouter);
 app.use('/room', roomRouter);
 app.use('/find', findRouter);
 app.use('/map', mapRouter);
-app.use('/logout', logoutRouter);
 app.use('/', indexRouter);
 
 app.listen(3001, function () {
