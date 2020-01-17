@@ -38,8 +38,8 @@ passport.use(new ClientPasswordStrategy(
 
 passport.use(new BearerStrategy(
     async function(token, done) {
+        console.log('BearerStrategy', arguments)
         try {
-            console.log('BearerStrategy', arguments)
             const dbAccessToken = await dbOauth.findAccessToken(token)
             if (!dbAccessToken) return done(null, false)
             if (+dbAccessToken.created + 60 * 60 * 1000 < Date.now()) {

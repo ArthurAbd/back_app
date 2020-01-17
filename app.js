@@ -13,7 +13,6 @@ const oauth2 = require('./helpers/oauth2')
 const app = express();
 
 app.use(bodyParser());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(cors())
 

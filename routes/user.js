@@ -4,6 +4,30 @@ const dbUser = require('../db/user');
 const dbOauth = require('../db/oauth');
 const passport = require('passport');
 const authHelper = require('../helpers/auth');
+const oauth2 = require('../helpers/oauth2')
+
+router.post('/login', async (req, res, next) => {
+      try {
+          const {username, password} = req.body;
+          const user = await dbUser.findUserByEmail(username)
+
+          if (!user) {return res.status(403).json('Пользователь не найден')}
+          if (authHelper.checkPassword(password, user.password, user.email)) {
+            return next()
+          }
+          res.status(403).json('Не верный пароль')
+      } catch (error) {
+        console.log('error', error)
+          res.status(500)
+          .json('Ошибка на сервере');
+      }
+  }, oauth2.token)
+
+router.post('/me',
+  passport.authenticate('bearer', { session: false }),
+    async (req, res) => {
+      res.json({name: req.user.name, email: req.user.email})
+  })
 
 router.post('/edit',
   passport.authenticate('bearer', { session: false }),
@@ -55,6 +79,7 @@ router.post('/profile',
 
 router.post('/logout',
   passport.authenticate('bearer', { session: false }), async (req, res) => {
+    console.log(req.user)
     await dbOauth.delRefreshToken(req.user.userId, req.body.clientId)
     await dbOauth.delAccessToken(req.user.userId, req.body.clientId)
     res.sendStatus(200)
