@@ -15,6 +15,10 @@ const app = express();
 app.use(bodyParser());
 app.use(passport.initialize());
 app.use(cors())
+app.use(function(req, res, next) {
+  console.log('header', req.headers)
+  next()
+})
 
 require('./helpers/strategies');
 

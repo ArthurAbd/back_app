@@ -11,9 +11,9 @@ passport.use(new BasicStrategy(
     async function(username, password, done) {
         console.log('BasicStrategy', arguments)
         try {
-            const user = await dbUser.findUser(username)
+            const user = await dbUser.findUserByNumber(username)
             if (!user) return done(null, false)
-            if (!authHelper.checkPassword(password, user.password, user.username)) return done(null, false)
+            if (!authHelper.checkPassword(password, user.password, user.number)) return done(null, false)
 
             return done(null, user);
         } catch (error) {

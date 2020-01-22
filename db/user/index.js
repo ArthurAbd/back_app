@@ -5,15 +5,6 @@ async function addUser(data) {
         .insert(data);
 }
 
-async function findUser(email) {
-    return knex('user')
-        .where('email', email)
-        .then(res => {
-            if (!res) undefined
-            return res[0]
-        });
-}
-
 async function findUserById(id) {
     return knex('user')
         .where('userId', id)
@@ -23,9 +14,9 @@ async function findUserById(id) {
         });
 }
 
-async function findUserByEmail(email) {
+async function findUserByNumber(number) {
     return knex('user')
-        .where('email', email)
+        .where('number', number)
         .then(res => {
             if (!res) undefined
             return res[0]
@@ -42,7 +33,6 @@ async function editUser(data, id) {
 module.exports = {
     editUser,
     addUser,
-    findUser,
     findUserById,
-    findUserByEmail
+    findUserByNumber
 }

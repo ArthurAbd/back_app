@@ -10,7 +10,7 @@ const server = oauth2orize.createServer();
 server.exchange(oauth2orize.exchange.password(async function(client, username, password, scope, done) {
     try {
         console.log('serverPassword', arguments)
-        const user = await dbUser.findUserByEmail(username)
+        const user = await dbUser.findUserByNumber(username)
 
         if (!user) return done(null, false, { message: 'Пользователь не существует' })
         if (!authHelper.checkPassword(password, user.password, username)) {
