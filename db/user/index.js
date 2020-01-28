@@ -17,14 +17,13 @@ async function findUserById(id) {
 async function findUserByidPhoneNumber(id) {
     return knex('user')
         .where('idPhoneNumber', id)
-        .select('userId')
         .then(res => {
             if (!res[0]) {return undefined}
             return res[0]
         })
 }
 
-async function findNumberOrCreate(number) {
+async function getIdNumberOrCreate(number) {
     return knex('phone_number')
         .where('number', number)
         .select('idPhoneNumber')
@@ -36,8 +35,24 @@ async function findNumberOrCreate(number) {
         })
 }
 
+async function getIdNumber(number) {
+    return knex('phone_number')
+        .where('number', number)
+        .select('idPhoneNumber')
+        .then(res => {
+            if (res[0]) {return res[0].idPhoneNumber}
+            return undefined
+        })
+}
 
-// findUserByidPhoneNumber(2).then((res) => console.log(!!res))
+async function getNumberById(id) {
+    return knex('phone_number')
+        .where('idPhoneNumber', id)
+        .select('number')
+        .then(res => {
+            return res[0].number
+        })
+}
 
 async function editUser(data, id) {
     return knex('user')
@@ -51,5 +66,7 @@ module.exports = {
     addUser,
     findUserById,
     findUserByidPhoneNumber,
-    findNumberOrCreate
+    getIdNumberOrCreate,
+    getIdNumber,
+    getNumberById
 }

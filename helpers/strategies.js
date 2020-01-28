@@ -11,9 +11,12 @@ passport.use(new BasicStrategy(
     async function(username, password, done) {
         console.log('BasicStrategy', arguments)
         try {
-            const user = await dbUser.findUserByNumber(username)
+            const idPhoneNumber = await dbUser.getIdNumber(username);
+            const user = idPhoneNumber ?
+                await dbUser.findUserByidPhoneNumber(idPhoneNumber) : undefined
+
             if (!user) return done(null, false)
-            if (!authHelper.checkPassword(password, user.password, user.number)) return done(null, false)
+            if (!authHelper.checkPassword(password, user.password, user.idPhoneNumber)) return done(null, false)
 
             return done(null, user);
         } catch (error) {

@@ -8,21 +8,18 @@ const indexRouter = require('./routes/index');
 const mapRouter = require('./routes/map');
 const userRouter = require('./routes/user');
 const cors = require('cors')
-const oauth2 = require('./helpers/oauth2')
 
 const app = express();
 
 app.use(bodyParser());
 app.use(passport.initialize());
 app.use(cors())
-app.use(function(req, res, next) {
-  console.log('header', req.headers)
-  next()
-})
+// app.use(function(req, res, next) {
+//   console.log('header', req.headers)
+//   next()
+// })
 
 require('./helpers/strategies');
-
-app.post('/oauth/token', oauth2.token);
 
 app.use(logger('dev'));
 

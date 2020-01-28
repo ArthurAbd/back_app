@@ -18,6 +18,8 @@ async function findAccessToken(token) {
         });
 }
 
+findAccessToken('6d+lMX0fUyZg20gnJZR4MnG5vQabIKF99ey7QW1TtNk=').then(res => console.log(res))
+
 async function findRefreshToken(refreshToken) {
     return knex('refresh_token')
         .where('token', refreshToken)

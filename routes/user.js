@@ -11,34 +11,38 @@ router.post('/add', async (req, res) => {
   try {
     const {name, number, password} = req.body;
 
-    const idPhoneNumber = await dbUser.findNumberOrCreate(number);
+    const idPhoneNumber = await dbUser.getIdNumberOrCreate(number);
     const user = await dbUser.findUserByidPhoneNumber(idPhoneNumber);
     if (user) {return res.status(403).json('Пользователь уже существует')}
 
     const dataUser = {
         name,
         idPhoneNumber,
-        password: authHelper.encryptPassword(password, idPhoneNumber.toString()),
+        password: authHelper.encryptPassword(password, idPhoneNumber),
         created: Date.now()
     }
 
     const newUserId = await dbUser.addUser(dataUser);
     if (newUserId[0]) {return res.status(200).json('Пользователь добавлен')}
 
+    res.status(500).json('Ошибка на сервере')
   } catch (error) {
       res.status(500)
-      .json('Внутренняя ошибка сервера');
+      .json('Ошибка на сервере');
   }
 });
-
 
 router.post('/login', async (req, res, next) => {
   try {
       const {username, password} = req.body;
-      const user = await dbUser.findUserByNumber(username)
+
+      const idPhoneNumber = await dbUser.getIdNumber(username);
+      const user = idPhoneNumber ?
+        await dbUser.findUserByidPhoneNumber(idPhoneNumber) : undefined
 
       if (!user) {return res.status(403).json('Пользователь не найден')}
-      if (authHelper.checkPassword(password, user.password, user.number)) {
+      
+      if (authHelper.checkPassword(password, user.password, user.idPhoneNumber)) {
         return next()
       }
       res.status(403).json('Не верный пароль')
@@ -49,43 +53,54 @@ router.post('/login', async (req, res, next) => {
   }
 }, oauth2.token)
 
-router.post('/me',
-  passport.authenticate('bearer', { session: false }),
-    async (req, res) => {
-      res.json({name: req.user.name, number: req.user.number})
-  })
+router.post('/getNewToken', oauth2.token)
 
-router.post('/edit',
-  passport.authenticate('bearer', { session: false }),
-    async (req, res) => {
-      try {
-          const data = req.body;
-          const info = {
-              name: data.name,
-              number: data.number,
-              password: authHelper.encryptPassword(data.password, data.number)
-          }
-          dbUser.editUser(info, req.user.userId)
-          res.status(200)
-          .json('User edit');
-      } catch (error) {
-          res.status(500)
-          .json('Error');
+router.post('/edit', passport.authenticate('bearer', { session: false }),
+  async (req, res) => {
+    try {
+      const {name, newPassword, password} = req.body;
+
+      if (!await authHelper.checkPassword(password, req.user.password, req.user.idPhoneNumber)) {
+        return res.status(403).json('Не верный пароль')
       }
+      
+      const data = {name}
+      data.password = newPassword ?
+        authHelper.encryptPassword(newPassword, req.user.idPhoneNumber) :
+        undefined
+
+      if (await dbUser.editUser(data, req.user.userId)) {
+        return res.status(200).json('Информация обновлена')
+      }
+      
+      return res.status(500).json('Ошибка на сервере')
+    } catch (error) {
+        res.status(500)
+        .json('Ошибка на сервере');
+    }
   });
 
-router.post('/profile',
-  passport.authenticate('bearer', { session: false }),
-    function(req, res) {
-      res.json({name: req.user.name, number: req.user.number, id: req.user.userId});
-});
+router.post('/me', passport.authenticate('bearer', { session: false }),
+  async (req, res) => {
+    res.json({name: req.user.name})
+})
 
 router.post('/logout',
   passport.authenticate('bearer', { session: false }), async (req, res) => {
-    console.log('logout', req.user)
     await dbOauth.delRefreshToken(req.user.userId, req.body.clientId)
     await dbOauth.delAccessToken(req.user.userId, req.body.clientId)
     res.sendStatus(200)
+});
+
+router.post('/getMyData', passport.authenticate('bearer', { session: false }),
+  async function(req, res) {
+    try {
+      const number = await dbUser.getNumberById(req.user.idPhoneNumber)
+      res.json({name: req.user.name, number: number, id: req.user.userId});
+    } catch (error) {
+      res.status(500)
+      .json('Ошибка на сервере');
+    }
 });
 
 
