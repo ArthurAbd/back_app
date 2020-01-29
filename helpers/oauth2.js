@@ -8,16 +8,13 @@ const authHelper          = require('./auth')
 const server = oauth2orize.createServer();
 
 server.exchange(oauth2orize.exchange.password(async function(client, username, password, scope, done) {
-    try {
-        console.log('serverPassword', arguments)
-        
+    try {       
         const idPhoneNumber = await dbUser.getIdNumber(username);
         const user = idPhoneNumber ?
             await dbUser.findUserByidPhoneNumber(idPhoneNumber) : undefined
 
         if (!user) return done(null, false, { message: 'Пользователь не существует' })
         if (!authHelper.checkPassword(password, user.password, idPhoneNumber)) {
-            console.log(password, user.password, username)
             return done(null, false, { message: 'Не правильный пароль' })
         }
 
@@ -41,14 +38,12 @@ server.exchange(oauth2orize.exchange.password(async function(client, username, p
         
         return done(null, tokenValue, refreshTokenValue, { 'expires_in': 3600 })
     } catch (error) {
-        console.log(error)
         return done(error)
     }
 }))
 
 server.exchange(oauth2orize.exchange.refreshToken(async function(client, refreshToken, scope, done) {
     try {
-        console.log('serverRefreshToken', arguments)
         const dbRefreshToken = await dbOauth.findRefreshToken(refreshToken)
         if (!dbRefreshToken) return done(null, false, { message: 'Incorrect refresh token' })
 

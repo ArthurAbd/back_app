@@ -9,7 +9,6 @@ const authHelper              = require('./auth')
 
 passport.use(new BasicStrategy(
     async function(username, password, done) {
-        console.log('BasicStrategy', arguments)
         try {
             const idPhoneNumber = await dbUser.getIdNumber(username);
             const user = idPhoneNumber ?
@@ -27,7 +26,6 @@ passport.use(new BasicStrategy(
 
 passport.use(new ClientPasswordStrategy(
     async function(clientId, clientSecret, done) {
-        console.log('ClientPasswordStrategy', arguments)
         try {
             const client = await dbOauth.findClient(clientId)
             if (!client) return done(null, false)
@@ -41,7 +39,6 @@ passport.use(new ClientPasswordStrategy(
 
 passport.use(new BearerStrategy(
     async function(token, done) {
-        console.log('BearerStrategy', arguments)
         try {
             const dbAccessToken = await dbOauth.findAccessToken(token)
             if (!dbAccessToken) return done(null, false)
