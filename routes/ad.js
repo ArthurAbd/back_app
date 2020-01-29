@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const dbUser = require('../db/user');
 const dbAd = require('../db/ad');
 
 router.post('/newAd', passport.authenticate('bearer', { session: false }), 
