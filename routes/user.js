@@ -80,7 +80,7 @@ router.post('/edit', passport.authenticate('bearer', { session: false }),
     }
   });
 
-router.post('/me', passport.authenticate('bearer', { session: false }),
+router.post('/getMe', passport.authenticate('bearer', { session: false }),
   async (req, res) => {
     res.json({name: req.user.name})
 })
