@@ -7,7 +7,7 @@ const authHelper = require('../helpers/auth');
 const v = require('../helpers/validator');
 const oauth2 = require('../helpers/oauth2');
 
-router.post('/add', v.validate(v.USER_ADD_SCHEMA), async (req, res) => {
+router.post('/addUser', v.validate(v.USER_ADD_SCHEMA), async (req, res) => {
     try {
         const {name, number, password} = req.body;
 
@@ -54,7 +54,7 @@ router.post('/login', v.validate(v.LOGIN_SCHEMA), async (req, res, next) => {
 
 router.post('/getNewToken', v.validate(v.NEW_TOKEN_SCHEMA), oauth2.token)
 
-router.post('/edit', v.validate(v.EDIT_USER_SCHEMA), 
+router.post('/editUser', v.validate(v.EDIT_USER_SCHEMA), 
     passport.authenticate('bearer', { session: false }), async (req, res) => {
         try {
             const {name, newPassword, password} = req.body;
