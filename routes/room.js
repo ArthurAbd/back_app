@@ -6,8 +6,8 @@ const v = require('../helpers/validator');
 router.post('/getOneRoom', v.validate(v.GET_ONE_ROOM_SCHEMA), 
     async (req, res) => {
         try {
-            const {id} = req.body;
-            const data = await dbRoom.getOneRoom(id);
+            const {idAd} = req.body;
+            const data = await dbRoom.getOneRoom(idAd);
             if (!data) {
                 return res.status(404).json('Страница не найдена');
             }

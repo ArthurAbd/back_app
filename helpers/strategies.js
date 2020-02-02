@@ -41,7 +41,7 @@ passport.use(new BearerStrategy(
     async function(token, done) {
         try {
             const dbAccessToken = await dbOauth.findAccessToken(token)
-            if (!dbAccessToken) return done(null, false)
+            if (!dbAccessToken) return done(null, false, { message: 'Token not found' })
             if (+dbAccessToken.created + 60 * 60 * 1000 < Date.now()) {
                 dbOauth.delAccessTokenByToken(token)
                 return done(null, false, { message: 'Token expired' }) 

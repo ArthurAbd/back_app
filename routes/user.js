@@ -7,7 +7,7 @@ const authHelper = require('../helpers/auth');
 const v = require('../helpers/validator');
 const oauth2 = require('../helpers/oauth2');
 
-router.post('/addUser', v.validate(v.USER_ADD_SCHEMA), async (req, res) => {
+router.post('/addUser', v.validate(v.ADD_USER_SCHEMA), async (req, res) => {
     try {
         const {name, number, password} = req.body;
 

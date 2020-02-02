@@ -12,7 +12,7 @@ let validate = schema => (req, res, next) => {
 
 const ADD_USER_SCHEMA = Joi.object().keys({
     name: Joi.string().min(3).max(30).required(),
-    number: Joi.string().length(10).required(),
+    number: Joi.number().min(1000000000).max(9999999999).required(),
     password: Joi.string().min(6).max(30).required(),
 })
 
