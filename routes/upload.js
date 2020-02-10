@@ -1,9 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const v = require('../helpers/validator');
 const multer  = require("multer");
-const fs = require('fs');
+const fs = require('fs')
+const Jimp = require('jimp');
+
+// const waterMark = './uploads/1/rental.png'
+// const resizeTo1280 = (filePath) => {
+//     console.log(filePath)
+    // return new Promise((resolve, reject) => {
+    //     Jimp.read(filePath)
+    //     .then(image => {
+    //         Jimp.read(waterMark).then(water => {
+    //             image
+    //             .scaleToFit(1280, 960)
+    //             .quality(80)
+    //             .composite(water, 20, 0, {
+    //                 mode: Jimp.BLEND_SOURCE_OVER,
+    //                 opacitySource: 0.7,
+    //                 opacityDest: 1
+    //             })
+    //             .write('./uploads/1/61.jpeg')
+    //         })
+    //     })
+    //     .catch(err => {
+    //         console.error(err)
+    //     })
+    // })
+// }
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -20,7 +44,7 @@ const storage = multer.diskStorage({
     },
 
     filename: (req, file, cb) =>{
-        cb(null, `${req.user.userId}_${Date.now()}.${file.mimetype.substr(6)}`);
+        cb(null, `${req.user.userId}_${Date.now()}.jpeg`);
     }
 });
 
@@ -39,7 +63,7 @@ const fileFilter = (req, file, cb) => {
 
 
 const limits =  {
-    fileSize:  1024 * 1024 * 10,
+    fileSize:  1024 * 1024 * 20,
     files: 20,
     fields: 0
 }
@@ -58,7 +82,13 @@ router.post('/single',
                     }
 
                     if (req.file) {
-                        return res.status(200).send(req.file.path);
+                        // resizeTo1280(req.file.path)
+                        // .then((file) => {
+                            return res.status(200).send(req.file.path)
+                        // })
+                        // .catch((err) => {
+                        //     return res.status(500).send('Ошибка на сервере')
+                        // })
                     }
                     res.status(403).send('Добавьте фотографии')
                 })
