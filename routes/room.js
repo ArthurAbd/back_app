@@ -20,18 +20,20 @@ router.post('/getOneRoom', v.validate(v.GET_ONE_ROOM_SCHEMA),
 
 router.post('/getListRooms', v.validate(v.GET_LIST_ROOM_SCHEMA),
     async (req, res) => {
+        const dataQuery = {...req.body}
         try {
-            if (req.body.type === 'string') {
+            if (typeof req.body.type === 'string') {
                 dataQuery.type = req.body.type.split(',')
             }
-            if (req.body.coordX === 'string' && req.body.coordY === 'string') {
+            if (typeof req.body.coordX === 'string' && typeof req.body.coordY === 'string') {
                 dataQuery.coordX = req.body.coordX.split(',')
                 dataQuery.coordY = req.body.coordY.split(',')
             }
-
-            const data = await dbRoom.getListRooms(req.body);
+            console.log('dataQuery',dataQuery)
+            const data = await dbRoom.getListRooms(dataQuery);
             res.status(200).json(data);
-        } catch (error) {
+        } catch (err) {
+            console.log(err)
             res.status(500).json('Ошибка на сервере');
         }
 });

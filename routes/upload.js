@@ -6,32 +6,50 @@ const fs = require('fs')
 const Jimp = require('jimp');
 
 // const waterMark = './uploads/1/rental.png'
-// const resizeTo1280 = (filePath) => {
-//     console.log(filePath)
-    // return new Promise((resolve, reject) => {
-    //     Jimp.read(filePath)
-    //     .then(image => {
-    //         Jimp.read(waterMark).then(water => {
-    //             image
-    //             .scaleToFit(1280, 960)
-    //             .quality(80)
-    //             .composite(water, 20, 0, {
-    //                 mode: Jimp.BLEND_SOURCE_OVER,
-    //                 opacitySource: 0.7,
-    //                 opacityDest: 1
-    //             })
-    //             .write('./uploads/1/61.jpeg')
-    //         })
-    //     })
-    //     .catch(err => {
-    //         console.error(err)
-    //     })
-    // })
-// }
+const resizeTo1280 = (file) => {
+    console.log(file)
+    return new Promise((resolve, reject) => {
+        Jimp.read(file.path)
+        .then(image => {
+            // Jimp.read(waterMark).then(water => {
+                image
+                .scaleToFit(1280, 960)
+                .quality(80)
+                // .composite(water, 20, 0, {
+                //     mode: Jimp.BLEND_SOURCE_OVER,
+                //     opacitySource: 0.7,
+                //     opacityDest: 1
+                // })
+                .write(`./uploads/1280_960/${file.filename}`)
+                resolve(`./uploads/1280_960/${file.filename}`)
+            // })
+        })
+        .catch(err => {
+            console.error(err)
+            reject(err)
+        })
+    })
+}
+const resizeTo196 = (file) => {
+    console.log(file)
+    return new Promise((resolve, reject) => {
+        Jimp.read(file.path)
+        .then(image => {
+            image
+            .scaleToFit(196, 144)
+            .quality(80)
+            .write(`./uploads/196_144/${file.filename}`)
+            resolve(`./uploads/196_144/${file.filename}`)
+        })
+        .catch(err => {
+            console.error(err)
+            reject(err)
+        })
+    })
+}
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log(file)
         const path = `./uploads/${new Date().getMonth()}`
         
         try {
@@ -82,15 +100,20 @@ router.post('/single',
                     }
 
                     if (req.file) {
-                        // resizeTo1280(req.file.path)
-                        // .then((file) => {
-                            return res.status(200).send(req.file.path)
-                        // })
-                        // .catch((err) => {
-                        //     return res.status(500).send('Ошибка на сервере')
-                        // })
+                        Promise.all([
+                            resizeTo196(req.file),
+                            resizeTo1280(req.file)
+                        ])
+                        .then((file) => {
+                            return res.status(200).send(file[0])
+                        })
+                        .catch((err) => {
+                            return res.status(500).send('Ошибка на сервере')
+                        })
+                    } else {
+                        res.status(403).send('Добавьте фотографии')
                     }
-                    res.status(403).send('Добавьте фотографии')
+                    
                 })
             } catch (error) {
                 res.status(500).send('Ошибка на сервере');

@@ -81,7 +81,7 @@ const GET_LIST_ROOM_SCHEMA = Joi.object().keys({
     limit: Joi.number().default(10),
     min: Joi.number().default(0),
     max: Joi.number().default(9999999),
-    type: Joi.array().default(['r', 'st', '1k', '2k', '3k', '4k+']),
+    type: Joi.string().default(['r', 'st', '1k', '2k', '3k', '4k+']),
     coordX: Joi.array().default([-180, 180]),
     coordY: Joi.array().default([-90, 90]),
 })
