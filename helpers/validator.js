@@ -96,12 +96,12 @@ const GET_NUMBER_SCHEMA = Joi.object().keys({
 
 const UPD_IN_CALL_SCHEMA = Joi.object().keys({
     IdInCall: Joi.number().required(),
-    rating: Joi.number().integer().min(-1).max(1).required(),
+    rating: Joi.number().integer().min(-1).max(2).required(),
 })
 
 const UPD_OUT_CALL_SCHEMA = Joi.object().keys({
-    IdOutCall: Joi.number().required(),
-    rating: Joi.number().integer().min(-1).max(1).required(),
+    idOutCall: Joi.number().required(),
+    rating: Joi.number().integer().min(-1).max(2).required(),
 })
 
 module.exports = {

@@ -11,7 +11,7 @@ async function getOneRoom(id) {
                 'room_description.photos', 'room_description.price',
                 'room_description.coordX', 'room_description.coordY',
                 'room_description.text', 'room_description.origin', 
-                'city.tag', 'type.tag', 'ad.created')
+                'city.name', 'type.name', 'type.shortName','ad.created')
         .then(res => res[0]);
 }
 
@@ -28,8 +28,9 @@ async function getListRooms(dataQuery) {
         .whereBetween('room_description.coordY', dataQuery.coordY)
         .offset(dataQuery.offset)
         .limit(dataQuery.limit)
-        .select('ad.idAd', 'room_description.price',
-            'room_description.address', 'room_description.photos')
+        .select('ad.idAd', 'room_description.price', 'type.name',
+            'room_description.address', 'room_description.area',
+            'room_description.photos')
 
     const coords = await knex('ad')
         .innerJoin('city', 'city.idCity', '=', 'ad.idCity')
@@ -53,7 +54,7 @@ async function getMapItem(id) {
         .innerJoin('type', 'type.idType', '=', 'ad.idType')
         .innerJoin('room_description', 'room_description.idRoom', '=', 'ad.idRoomDescription')
         .select('ad.idAd', 'room_description.price',
-            'room_description.address', 'room_description.photos')
+            'room_description.coordX', 'room_description.coordY')
         .first()
 }
 
