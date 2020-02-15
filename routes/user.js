@@ -94,7 +94,7 @@ router.post('/getMyData', passport.authenticate('bearer', { session: false }),
     async function(req, res) {
         try {
             const number = await dbUser.getNumberById(req.user.idPhoneNumber)
-            res.status(200).json({name: req.user.name, number: number, id: req.user.userId});
+            res.status(200).json({name: req.user.name, number: number, checked: req.user.checked});
         } catch (error) {
             res.status(500).json('Ошибка на сервере');
         }
