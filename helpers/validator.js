@@ -17,7 +17,7 @@ const ADD_USER_SCHEMA = Joi.object().keys({
 })
 
 const EDIT_USER_SCHEMA = Joi.object().keys({
-    name: Joi.string().min(3).max(30).required(),
+    name: Joi.string().min(3).max(30),
     password: Joi.string().min(6).max(30).required(),
     newPassword: Joi.string().min(6).max(30),
 })
@@ -95,7 +95,7 @@ const GET_NUMBER_SCHEMA = Joi.object().keys({
 })
 
 const UPD_IN_CALL_SCHEMA = Joi.object().keys({
-    IdInCall: Joi.number().required(),
+    idInCall: Joi.number().required(),
     rating: Joi.number().integer().min(-1).max(2).required(),
 })
 

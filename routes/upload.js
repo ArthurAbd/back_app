@@ -5,24 +5,25 @@ const multer  = require("multer");
 const fs = require('fs')
 const Jimp = require('jimp');
 
-// const waterMark = './uploads/1/rental.png'
+const waterMark = './rental.png'
+
 const resizeTo1280 = (file) => {
     console.log(file)
     return new Promise((resolve, reject) => {
         Jimp.read(file.path)
         .then(image => {
-            // Jimp.read(waterMark).then(water => {
+            Jimp.read(waterMark).then(water => {
                 image
                 .scaleToFit(1280, 960)
                 .quality(80)
-                // .composite(water, 20, 0, {
-                //     mode: Jimp.BLEND_SOURCE_OVER,
-                //     opacitySource: 0.7,
-                //     opacityDest: 1
-                // })
+                .composite(water, 20, 0, {
+                    mode: Jimp.BLEND_SOURCE_OVER,
+                    opacitySource: 0.7,
+                    opacityDest: 1
+                })
                 .write(`./uploads/1280_960/${file.filename}`)
-                resolve(`./uploads/1280_960/${file.filename}`)
-            // })
+                resolve(`${file.filename}`)
+            })
         })
         .catch(err => {
             console.error(err)
@@ -39,7 +40,7 @@ const resizeTo196 = (file) => {
             .scaleToFit(196, 144)
             .quality(80)
             .write(`./uploads/196_144/${file.filename}`)
-            resolve(`./uploads/196_144/${file.filename}`)
+            resolve(`${file.filename}`)
         })
         .catch(err => {
             console.error(err)
@@ -105,6 +106,7 @@ router.post('/single',
                             resizeTo1280(req.file)
                         ])
                         .then((file) => {
+                            console.log(file)
                             return res.status(200).send(file[0])
                         })
                         .catch((err) => {

@@ -58,8 +58,9 @@ async function getMyAds(id) {
     return knex('ad')
         .where({'idPhoneNumber': id, 'isActive': 1})
         .innerJoin('room_description', 'ad.idRoomDescription', '=', 'room_description.idRoom')
+        .innerJoin('type', 'ad.idType', '=', 'type.idType')
         .limit(10)
-        .select('idAd', 'idType', 'price', 'area', 'address', 'photos')
+        .select('idAd', 'name', 'price', 'area', 'address', 'photos')
 }
 
 module.exports = {
