@@ -2,7 +2,7 @@ const knex = require('../connection');
 
 async function getInCalls(id) {
     return knex('ad')
-        .where({'ad.idPhoneNumber': id, 'isActive': 1})
+        .where({'ad.idPhoneNumber': id})
         .innerJoin('incoming_call', 'incoming_call.idAd', '=', 'ad.idAd')
         .innerJoin('room_description', 'room_description.idRoom', '=', 'ad.idRoomDescription')
         .innerJoin('type', 'type.idType', '=', 'ad.idType')
