@@ -92,6 +92,7 @@ router.post('/logout', v.validate(v.LOGOUT_SCHEMA),
 
 router.post('/getMyData', passport.authenticate('bearer', { session: false }),
     async function(req, res) {
+        console.log(req.user)
         try {
             const number = await dbUser.getNumberById(req.user.idPhoneNumber)
             res.status(200).json({name: req.user.name, number: number, checked: req.user.checked});
