@@ -8,7 +8,7 @@ const Jimp = require('jimp');
 const waterMark = './rental.png'
 
 const resizeTo1280 = (file) => {
-    console.log(file)
+    console.log(global.host)
     return new Promise((resolve, reject) => {
         Jimp.read(file.path)
         .then(image => {
@@ -22,7 +22,7 @@ const resizeTo1280 = (file) => {
                     opacityDest: 1
                 })
                 .write(`./uploads/1280_960/${file.filename}`)
-                resolve(`${file.filename}`)
+                resolve(`//${global.host}/uploads/1280_960/${file.filename}`)
             })
         })
         .catch(err => {
@@ -31,6 +31,7 @@ const resizeTo1280 = (file) => {
         })
     })
 }
+
 const resizeTo196 = (file) => {
     console.log(file)
     return new Promise((resolve, reject) => {
@@ -40,7 +41,7 @@ const resizeTo196 = (file) => {
             .scaleToFit(196, 144)
             .quality(80)
             .write(`./uploads/196_144/${file.filename}`)
-            resolve(`${file.filename}`)
+            resolve(`//${global.host}/uploads/196_144/${file.filename}`)
         })
         .catch(err => {
             console.error(err)
@@ -106,8 +107,7 @@ router.post('/single',
                             resizeTo1280(req.file)
                         ])
                         .then((file) => {
-                            console.log(file)
-                            return res.status(200).send(file[0])
+                            return res.status(200).send(file)
                         })
                         .catch((err) => {
                             return res.status(500).send('Ошибка на сервере')
@@ -123,25 +123,25 @@ router.post('/single',
             
         });
 
-router.post('/array', 
-    passport.authenticate('bearer', { session: false }),
-        function (req, res, next) {
-            try {
-                uploadArray(req, res, function (err) {
-                    if (err) {
-                        console.log(err)
-                        return res.status(403).send(err.message);
-                    }
-                    if (req.files[0]) {
-                        return res.status(200).send(req.files.map(img => img.path))
-                    }
-                    res.status(403).send('Добавьте фотографии')
-                })
-            } catch (error) {
-                res.status(500).send('Ошибка на сервере');
-            }
+// router.post('/array', 
+//     passport.authenticate('bearer', { session: false }),
+//         function (req, res, next) {
+//             try {
+//                 uploadArray(req, res, function (err) {
+//                     if (err) {
+//                         console.log(err)
+//                         return res.status(403).send(err.message);
+//                     }
+//                     if (req.files[0]) {
+//                         return res.status(200).send(req.files.map(img => img.path))
+//                     }
+//                     res.status(403).send('Добавьте фотографии')
+//                 })
+//             } catch (error) {
+//                 res.status(500).send('Ошибка на сервере');
+//             }
 
-        })
+//         })
 
 
 module.exports = router;

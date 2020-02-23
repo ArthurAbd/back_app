@@ -11,14 +11,14 @@ router.post('/newAd', v.validate(v.ADD_AD_SCHEMA),
                 const {
                     city, type, price, area,
                     floor, floors, address, coordX, coordY,
-                    text, photos
+                    text, photos, photosSmall
                 } = req.body
                 const idCity = await dbAd.getIdCity(city)
                 const idType = await dbAd.getIdType(type)
                 const idPhoneNumber = req.user.idPhoneNumber
                 const idRoomDescription = await dbAd.addRoomDescription({
-                    price, area, floor, floors, address, coordX, coordY, text, photos})
-                    console.log(idCity,idType,idPhoneNumber,idRoomDescription)
+                    price, area, floor, floors, address, coordX,
+                    coordY, text, photos, photosSmall})
                 const idAd = await dbAd.addAd({
                     idCity, idType, idPhoneNumber, idRoomDescription,
                     created: Date.now()

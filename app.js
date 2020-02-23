@@ -20,6 +20,13 @@ require('./helpers/strategies');
 
 app.use(logger('dev'));
 
+
+app.use((req, res, next) => {
+  global.host = req.headers.host
+  next()
+})
+
+
 app.use(express.static(__dirname));
 app.use('/upload', uploadRouter);
 app.use('/user', userRouter);

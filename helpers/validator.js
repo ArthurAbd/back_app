@@ -53,6 +53,7 @@ const ADD_AD_SCHEMA = Joi.object().keys({
     coordY: Joi.number().min(-90).max(90).required(),
     text: Joi.string().min(50).required(),
     photos: Joi.string(),
+    photosSmall: Joi.string(),
 })
 
 const EDIT_AD_SCHEMA = Joi.object().keys({

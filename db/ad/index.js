@@ -60,7 +60,7 @@ async function getMyAds(id) {
         .innerJoin('room_description', 'ad.idRoomDescription', '=', 'room_description.idRoom')
         .innerJoin('type', 'ad.idType', '=', 'type.idType')
         .limit(10)
-        .select('idAd', 'name', 'price', 'area', 'address', 'photos')
+        .select('idAd', 'name', 'price', 'area', 'address', 'photosSmall')
 }
 
 module.exports = {
