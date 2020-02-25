@@ -9,7 +9,7 @@ async function getInCalls(id) {
         .innerJoin('phone_number', 'phone_number.idPhoneNumber', '=', 'incoming_call.idPhoneNumber')
         .select('incoming_call.idInCall', 'incoming_call.rating',
                 'phone_number.number', 'room_description.area', 
-                'room_description.photos', 'type.name',
+                'room_description.photosSmall', 'type.name',
                 'incoming_call.created', 'ad.idAd')
 }
 

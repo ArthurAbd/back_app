@@ -30,7 +30,7 @@ async function getListRooms(dataQuery) {
         .limit(dataQuery.limit)
         .select('ad.idAd', 'room_description.price', 'type.name',
             'room_description.address', 'room_description.area',
-            'room_description.origin', 'room_description.photosSmall')
+            'room_description.photosSmall')
 
     const coords = await knex('ad')
         .innerJoin('city', 'city.idCity', '=', 'ad.idCity')
