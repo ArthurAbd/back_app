@@ -23,7 +23,7 @@ router.post('/getPhoneNumber', v.validate(v.GET_NUMBER_SCHEMA),
                     await dbCall.addIdInCall(idAd, req.user.idPhoneNumber)
                 }
                 
-                const outCall = await dbCall.getIdOutCall(idAd, req.user.userId)
+                let outCall = await dbCall.getIdOutCall(idAd, req.user.userId)
                 if (!outCall) {
                     outCall = await dbCall.addIdOutCall(idAd, req.user.userId) 
                 }
